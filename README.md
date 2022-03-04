@@ -61,5 +61,5 @@ curl http://localhost:3001/peers
 
 ### p2p logs
 
-The [console logs](./p2p.logs) can show the workflow of msg-exchange between peers.
+The [console logs](./p2p.md) can show the workflow of msg-exchange between peers.
 
