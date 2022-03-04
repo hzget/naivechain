@@ -25,6 +25,12 @@ var MessageType = {
     RESPONSE_BLOCKCHAIN: 2
 };
 
+var MessageTypeStr = [
+    'QUERY_LATEST',
+    'QUERY_ALL',
+    'RESPONSE_BLOCKCHAIN'
+]
+
 var getGenesisBlock = () => {
     return new Block(0, "0", 1465154705, "my genesis block!!", "816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7");
 };
@@ -39,8 +45,8 @@ var initHttpServer = () => {
     app.post('/mineBlock', (req, res) => {
         var newBlock = generateNextBlock(req.body.data);
         addBlock(newBlock);
-        broadcast(responseLatestMsg());
         console.log('block added: ' + JSON.stringify(newBlock));
+        broadcast(responseLatestMsg());
         res.send();
     });
     app.get('/peers', (req, res) => {
@@ -71,7 +77,8 @@ var initConnection = (ws) => {
 var initMessageHandler = (ws) => {
     ws.on('message', (data) => {
         var message = JSON.parse(data);
-        console.log('Received message' + JSON.stringify(message));
+        var peer = ws._socket.remoteAddress + ':' + ws._socket.remotePort
+        console.log('<==  ' + peer + ' (' + MessageTypeStr[message.type] +'): ' + JSON.stringify(message));
         switch (message.type) {
             case MessageType.QUERY_LATEST:
                 write(ws, responseLatestMsg());
@@ -202,8 +209,15 @@ var responseLatestMsg = () => ({
     'data': JSON.stringify([getLatestBlock()])
 });
 
-var write = (ws, message) => ws.send(JSON.stringify(message));
-var broadcast = (message) => sockets.forEach(socket => write(socket, message));
+var write = (ws, message) => {
+    var peer = ws._socket.remoteAddress + ':' + ws._socket.remotePort
+    console.log(' ==> ' + peer + ' (' + MessageTypeStr[message.type] + '): ' + JSON.stringify(message));
+    ws.send(JSON.stringify(message));
+};
+var broadcast = (message) => {
+    console.log('broadcast: ');
+    sockets.forEach(socket => write(socket, message));
+};
 
 connectToPeers(initialPeers);
 initHttpServer();
