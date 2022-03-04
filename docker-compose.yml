@@ -1,17 +1,13 @@
-version: '2'
+version: '3.7'
 services:
   node1:
-    build:
-      context: ./
-      dockerfile: Dockerfile
+    image: blockchain:latest
     ports:
     - "3001:3001"
   node2:
     environment:
       - PEERS=ws://node1:6001
-    build:
-      context: ./
-      dockerfile: Dockerfile
+    image: blockchain:latest
     ports:
     - "3002:3001"
     links:
@@ -19,9 +15,7 @@ services:
   node3:
     environment:
       - PEERS=ws://node2:6001
-    build:
-      context: ./
-      dockerfile: Dockerfile
+    image: blockchain:latest
     ports:
     - "3003:3001"
     links:
