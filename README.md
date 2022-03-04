@@ -58,3 +58,8 @@ curl -H "Content-type:application/json" --data '{"peer" : "ws://localhost:6001"}
 ```
 curl http://localhost:3001/peers
 ```
+
+### p2p logs
+
+The [console logs](./p2p.logs) can show the workflow of msg-exchange between peers.
+
