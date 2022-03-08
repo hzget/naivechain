@@ -1,5 +1,11 @@
 # Naivechain - a blockchain implementation in 200 lines of code
 
+It's a fork branch from [naivechain](https://github.com/lhartikk/naivechain)
+and add some new features:
+
+* p2p logs: The [console logs](./p2p.md) can show the workflow of msg-exchange between peers.
+* create only one docker image for all the nodes
+
 ### Motivation
 All the current implementations of blockchains are tightly coupled with the larger context and problems they (e.g. Bitcoin or Ethereum) are trying to solve. This makes understanding blockchains a necessarily harder task, than it must be. Especially source-code-wisely. This project is an attempt to provide as concise and simple implementation of a blockchain as possible.
 
@@ -37,7 +43,11 @@ curl -H "Content-type:application/json" --data '{"data" : "Some data to the firs
 (set up three connected nodes and mine a block)
 ###
 ```sh
+# create docker image
+docker build -t naivechain:1.0 .
+# start up containers from the image
 docker-compose up
+# mine blocks
 curl -H "Content-type:application/json" --data '{"data" : "Some data to the first block"}' http://localhost:3001/mineBlock
 ```
 
@@ -58,8 +68,4 @@ curl -H "Content-type:application/json" --data '{"peer" : "ws://localhost:6001"}
 ```
 curl http://localhost:3001/peers
 ```
-
-### p2p logs
-
-The [console logs](./p2p.md) can show the workflow of msg-exchange between peers.
 
